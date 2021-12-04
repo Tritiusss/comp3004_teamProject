@@ -672,6 +672,22 @@
       <string/>
      </property>
     </widget>
+    <widget class="QPushButton" name="recordButton">
+     <property name="geometry">
+      <rect>
+       <x>170</x>
+       <y>360</y>
+       <width>41</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/res/recordButton.svg);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
     <zorder>powerOffScreen</zorder>
     <zorder>displayScreen</zorder>
     <zorder>current_9</zorder>
@@ -702,6 +718,7 @@
     <zorder>lowBatteryWarning_2P</zorder>
     <zorder>lowBatteryWarning_5P</zorder>
     <zorder>batteryBar</zorder>
+    <zorder>recordButton</zorder>
    </widget>
    <widget class="QCheckBox" name="checkBox">
     <property name="geometry">

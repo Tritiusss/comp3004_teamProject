@@ -28,17 +28,15 @@ MainWindow::MainWindow(QWidget *parent)
     recordsLoaded = false;
     ui->RecordView->setVisible(false);
 
-    //connect(ui->powerButton, SIGNAL(released()), this, SLOT(on_powerButton_clicked()));
     connect(ui->frequencyButton, SIGNAL(released()), this, SLOT(changeFrequency()));
     connect(ui->waveformButton, SIGNAL(released()), this, SLOT(changeWaveform()));
     connect(ui->timeButton, SIGNAL(released()), this, SLOT(changeTime()));
     connect(ui->increaseCurrentButton, SIGNAL(released()), this, SLOT(increaseCurrent()));
     connect(ui->decreaseCurrentButton, SIGNAL(released()), this, SLOT(decreaseCurrent()));
-
+    connect(ui->recordButton, SIGNAL(released()), this, SLOT(addRecording()));
     connect(batteryTimer, SIGNAL(timeout()), this, SLOT(autoChangeBattery()));
     connect(ui->chargeButton, SIGNAL(released()), this, SLOT(chargeBattery()));
     connect(ui->batteryLineEdit, SIGNAL(returnPressed()), this, SLOT(changeBattery()));
-
     connect(ui->SaveRecordingButton, SIGNAL(released()), this, SLOT(addRecording()));
     connect(ui->LoadRecordingButton, SIGNAL(released()), this, SLOT(loadRecording()));
 
@@ -92,7 +90,6 @@ void MainWindow::changePowerStatus() {
     }
 
     timeCountDown = QString::number(currentTime) + ":00";
-    //scene->addText(timeCountDown);
 
     if(!powerStatus){
         ui->frequencyButton->setEnabled(powerStatus);
@@ -197,6 +194,8 @@ void MainWindow::changeTime() {
 
 void MainWindow::toggleSkinContact(bool s) {
     skinContact = s;
+    tempCountDown = timeCountDown; // reset
+
     if (skinContact && powerStatus) {
         circuitTimer->stop();
         circuitTimer = new QTimer(this);
@@ -275,7 +274,6 @@ void MainWindow::decreaseCurrent(){
     }
 }
 
-
 void MainWindow::on_checkBox_stateChanged(int arg1)
 {
     if (arg1) {
@@ -293,8 +291,8 @@ void MainWindow::toggleTreatment() {
         ui->displayScreen->scene()->clear();
         ui->displayScreen->scene()->addText("Treatment Stopped");
         countdownTimer->stop();
-        //timeCountDown = QString::number(currentTime) + ":00";
     }
+    tempCountDown = timeCountDown;
     timeCountDown = QString::number(currentTime) + ":00";
 }
 
@@ -406,8 +404,12 @@ void MainWindow::addRecording() {
 
     QStandardItem *start = new QStandardItem(QString::number(currentTime));
     records->setItem(numRecords,3, start);
+
     int timeInSec = 0;
-    QStringList splt = timeCountDown.split(QLatin1Char(':'));
+    QStringList splt;
+    if (!treatment) splt = tempCountDown.split(QLatin1Char(':'));
+    else splt = timeCountDown.split(QLatin1Char(':'));
+
     timeInSec += splt[0].toInt()*60;
     timeInSec += splt[1].toInt();
     int startTimeInSec = currentTime*60;
@@ -432,18 +434,15 @@ void MainWindow::addRecording() {
     QStandardItem *duration = new QStandardItem(finalDuration);
     records->setItem(numRecords,4, duration);
     numRecords++;
-
     }
 }
 
 void MainWindow::checkCurrent() {
-
     if (current > 14) {
         powerStatus = false;
         changePowerStatus();
     }
 }
-
 
 void MainWindow::on_currentFaultButton_clicked() {
     // simulate a current over 700 amps

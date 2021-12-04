@@ -7,5 +7,6 @@
         <file>res/waveButton.svg</file>
         <file>res/timeButton.svg</file>
         <file>res/powerButton.svg</file>
+        <file>res/recordButton.svg</file>
     </qresource>
 </RCC>

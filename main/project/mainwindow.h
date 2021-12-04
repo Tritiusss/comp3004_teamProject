@@ -30,13 +30,11 @@ private slots:
     void increaseCurrent();
     void decreaseCurrent();
     void on_checkBox_stateChanged(int arg1);
-
     void autoChangeBattery();
     void chargeBattery();
     void changeBattery();
     void addRecording();
     void loadRecording();
-
     void on_currentFaultButton_clicked();
 
 private:
@@ -47,6 +45,7 @@ private:
     QString timeCountDown;
     QGraphicsScene *scene;
     int currentTime;
+    QString tempCountDown;
     int current;
     bool skinContact;
     bool treatment;
@@ -64,11 +63,9 @@ private:
     void pauseTimer();
     void resumeTimer();
     void checkCurrent();
-
     QStandardItemModel *records;
     int numRecords;
     bool recordsLoaded;
-
     QTimer *batteryTimer;
     double currentBattery;
 };
