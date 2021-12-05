@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -56,7 +57,6 @@ void MainWindow::on_powerButton_clicked()
         circuitTimer = new QTimer(this);
         changeTime();
         currentTimer = new QTimer(this);
-        currentTimer->setSingleShot(true);
         connect(currentTimer, &QTimer::timeout, this, &MainWindow::checkCurrent);
         currentTimer->start(1000);
         if (skinContact) startTreatment();
@@ -65,7 +65,7 @@ void MainWindow::on_powerButton_clicked()
         delete autoTimer;
         delete countdownTimer;
         delete circuitTimer;
-
+        delete currentTimer;
     }
     changePowerStatus();
 }
@@ -188,6 +188,7 @@ void MainWindow::changeTime() {
 
     ui->displayScreen->scene()->clear();
     timeCountDown = QString::number(currentTime) + ":00";
+    tempCountDown = QString::number(currentTime) + ":00";
     scene->addText(timeCountDown);
     if (skinContact) toggleSkinContact(true);
 }
@@ -407,8 +408,12 @@ void MainWindow::addRecording() {
 
     int timeInSec = 0;
     QStringList splt;
-    if (!treatment) splt = tempCountDown.split(QLatin1Char(':'));
-    else splt = timeCountDown.split(QLatin1Char(':'));
+    if (!treatment) {
+        splt = tempCountDown.split(QLatin1Char(':'));
+    }
+    else {
+        splt = timeCountDown.split(QLatin1Char(':'));
+    }
 
     timeInSec += splt[0].toInt()*60;
     timeInSec += splt[1].toInt();
@@ -439,8 +444,7 @@ void MainWindow::addRecording() {
 
 void MainWindow::checkCurrent() {
     if (current > 14) {
-        powerStatus = false;
-        changePowerStatus();
+        on_powerButton_clicked();
     }
 }
 

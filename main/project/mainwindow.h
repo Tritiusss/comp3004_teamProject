@@ -53,6 +53,7 @@ private:
     QTimer *autoTimer;
     QTimer *countdownTimer;
     QTimer *currentTimer;
+    QTimer *batteryTimer;
     void changePowerStatus();
     void toggleSkinContact(bool);
     void toggleTreatment();
@@ -66,7 +67,6 @@ private:
     QStandardItemModel *records;
     int numRecords;
     bool recordsLoaded;
-    QTimer *batteryTimer;
     double currentBattery;
 };
 #endif // MAINWINDOW_H
