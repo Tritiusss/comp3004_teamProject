@@ -379,6 +379,19 @@ void MainWindow::changeBattery() {
     QString text = ui->batteryLineEdit->text();
     currentBattery = text.toDouble();
 
+    if(QString::number(currentBattery) == "2"){
+        ui->lowBatteryWarning_2P->setVisible(powerStatus);
+        ui->lowBatteryWarning_5P->setVisible(!powerStatus);
+        ui->lowBatteryWarning_2P->setText("Warning: 2% battery remaining!!!");
+    }else if(QString::number(currentBattery) == "5"){
+        ui->lowBatteryWarning_5P->setVisible(powerStatus);
+        ui->lowBatteryWarning_2P->setVisible(!powerStatus);
+        ui->lowBatteryWarning_5P->setText("Warning: 5% battery remaining!!!");
+    }else{
+        ui->lowBatteryWarning_2P->setVisible(!powerStatus);
+        ui->lowBatteryWarning_5P->setVisible(!powerStatus);
+    }
+    
     ui->batteryBar->setValue(currentBattery);
     ui->batteryLineEdit->setText(QString::number(currentBattery));
 }
