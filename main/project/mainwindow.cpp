@@ -48,6 +48,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+//power on/off button
 void MainWindow::on_powerButton_clicked()
 {
     powerStatus = !powerStatus;
@@ -70,6 +71,10 @@ void MainWindow::on_powerButton_clicked()
     }
     changePowerStatus();
 }
+
+//Change device power status
+//make the ui what we want to display on the screen is invisible when device is power off status
+//If the device status change from power on to power off, it will change the element to default value
 
 void MainWindow::changePowerStatus() {
     ui->displayScreen->setVisible(powerStatus);
@@ -223,6 +228,7 @@ void MainWindow::toggleSkinContact(bool s) {
 
 void MainWindow::increaseCurrent(){
     restartAutoTimer();
+    //when we display the current, the value of display current is current * 50
     if(current == 0){
         current += 2;
         ui->current_1->setVisible(true);
@@ -372,7 +378,8 @@ void MainWindow::shutdownCheck() {
     else { restartAutoTimer(); }
 }
 void MainWindow::autoChangeBattery() {
-    if(currentBattery > 2.0){
+    // Check the remain battery percent if 2% remain the device will poweroff
+    if(currentBattery >= 2.05){
         currentBattery -= 0.05;
 
     }else{
