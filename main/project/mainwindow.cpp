@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
     batteryTimer = new QTimer;
     currentBattery = 100.00;
 
+    // init variables
     scene = new QGraphicsScene(this);
     ui->displayScreen->setScene(scene);
     powerStatus = false;
@@ -18,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
     treatment = false;
     skinContact = false;
     changePowerStatus();
-
+    
     numRecords = 0;
     QStringList columnHeaders = {"Waveform", "Frequency", "Power Level","Start Time", "Duration"};
     records = new QStandardItemModel;
@@ -51,10 +52,11 @@ void MainWindow::on_powerButton_clicked()
 {
     powerStatus = !powerStatus;
     if (powerStatus) {
+        // init timers
         autoTimer = new QTimer(this);
         countdownTimer = new QTimer(this);
         circuitTimer = new QTimer(this);
-        changeTime();
+        changeTime(); // simulate default time
         currentTimer = new QTimer(this);
         connect(currentTimer, &QTimer::timeout, this, &MainWindow::checkCurrent);
         currentTimer->start(1000);
@@ -189,8 +191,7 @@ void MainWindow::changeTime() {
     timeCountDown = QString::number(currentTime) + ":00";
     tempCountDown = QString::number(currentTime) + ":00";
     scene->addText(timeCountDown);
-    if (skinContact) toggleSkinContact(true);
-}
+    if (skinContact) toggleSkinContact(true); // for when apply_to_skin is checked
 
 void MainWindow::toggleSkinContact(bool s) {
     skinContact = s;
@@ -199,15 +200,18 @@ void MainWindow::toggleSkinContact(bool s) {
     if (skinContact && powerStatus) {
         circuitTimer->stop();
         circuitTimer = new QTimer(this);
+        // change from OFF to ON
         ui->offLabel->setVisible(false);
         ui->onLabel->setVisible(true);
         startTreatment();
         treatment = true;
     }
     else if (!skinContact && powerStatus) {
+        // change from ON to OFF
         ui->offLabel->setVisible(true);
         ui->onLabel->setVisible(false);
         delete circuitTimer;
+        // timer for 5 seconds of no skin contact
         circuitTimer = new QTimer(this);
         circuitTimer->setSingleShot(true);
         connect(circuitTimer, &QTimer::timeout, this, &MainWindow::toggleTreatment);
@@ -217,6 +221,7 @@ void MainWindow::toggleSkinContact(bool s) {
 }
 
 void MainWindow::increaseCurrent(){
+    restartAutoTimer();
     if(current == 0){
         current += 2;
         ui->current_1->setVisible(true);
@@ -241,6 +246,7 @@ void MainWindow::increaseCurrent(){
 }
 
 void MainWindow::decreaseCurrent(){
+    restartAutoTimer();
     if(current == 10){
         current -= 1;
         ui->current_10->setVisible(false);
@@ -276,41 +282,40 @@ void MainWindow::decreaseCurrent(){
 
 void MainWindow::on_checkBox_stateChanged(int arg1)
 {
-    if (arg1) {
-        toggleSkinContact(true);
-    }
-    else {
-        toggleSkinContact(false);
-    }
+    // checkbox is checked
+    if (arg1) { toggleSkinContact(true); }
+    else { toggleSkinContact(false); }
 }
 
 void MainWindow::toggleTreatment() {
     treatment = !treatment;
     if (!treatment) {
+        // treatment has stopped
         ui->countdownLabel->setText("");
         ui->displayScreen->scene()->clear();
         ui->displayScreen->scene()->addText("Treatment Stopped");
         countdownTimer->stop();
     }
-    tempCountDown = timeCountDown;
+    tempCountDown = timeCountDown; // for save treatment after treatment has stopped
     timeCountDown = QString::number(currentTime) + ":00";
 }
 
 void MainWindow::startTreatment() {
     delete countdownTimer;
-    countdownTimer = new QTimer(this);
+    countdownTimer = new QTimer(this); // reset timer
     connect(countdownTimer, &QTimer::timeout, this, &MainWindow::updateTimer);
     countdownTimer->start(1000);
 }
 
 void MainWindow::updateTimer() {
     ui->displayScreen->scene()->clear();
+    // countdown time: m1m2:s1s2
     int m1 = timeCountDown[0].digitValue();
     int m2 = timeCountDown[1].digitValue();
     int s1 = timeCountDown[3].digitValue();
     int s2 = timeCountDown[4].digitValue();
 
-    s2 -= 1;
+    s2 -= 1; // -1 second
     if (s2 == -1) {
         s1 -= 1;
         s2 = 9;
@@ -325,22 +330,24 @@ void MainWindow::updateTimer() {
     }
     timeCountDown = QString::number(m1) + QString::number(m2) + ":" + QString::number(s1) + QString::number(s2);
     if (m1 == -1) {
+        // device has finished treatment
         timeCountDown = "00:00";
         countdownTimer->stop();
         treatment = false;
         restartAutoTimer();
     }
-    ui->countdownLabel->setText(timeCountDown);
+    ui->countdownLabel->setText(timeCountDown); // update time on screen
 }
 void MainWindow::restartAutoTimer() {
     delete autoTimer;
     autoTimer = new QTimer(this);
     autoTimer->setSingleShot(true);
     connect(autoTimer, &QTimer::timeout, this, &MainWindow::shutdownCheck);
-    autoTimer->start(1800000);
+    autoTimer->start(1800000); // 30 min
 }
 
 void MainWindow::shutdownCheck() {
+    // shutdown if not in treatment and device is not applied to skin
     if (!skinContact && !treatment) { on_powerButton_clicked(); }
     else { restartAutoTimer(); }
 }
@@ -455,9 +462,7 @@ void MainWindow::addRecording() {
 }
 
 void MainWindow::checkCurrent() {
-    if (current > 14) {
-        on_powerButton_clicked();
-    }
+    if (current > 14) { on_powerButton_clicked(); }
 }
 
 void MainWindow::on_currentFaultButton_clicked() {
