@@ -3,7 +3,7 @@ comp3004 team project.
 
 TA: Saman
 
-**Group member:**
+**Group members:**
 - Braedon Dillon
 - Yaro Markin
 - Tingxun Dai
