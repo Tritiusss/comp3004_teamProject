@@ -192,6 +192,7 @@ void MainWindow::changeTime() {
     tempCountDown = QString::number(currentTime) + ":00";
     scene->addText(timeCountDown);
     if (skinContact) toggleSkinContact(true); // for when apply_to_skin is checked
+}
 
 void MainWindow::toggleSkinContact(bool s) {
     skinContact = s;
@@ -226,21 +227,40 @@ void MainWindow::increaseCurrent(){
         current += 2;
         ui->current_1->setVisible(true);
         ui->current_2->setVisible(true);
+    }else if(current == 1){
+        current += 2;
+        ui->current_2->setVisible(true);
+        ui->current_3->setVisible(true);
     }else if(current == 2){
         current += 2;
         ui->current_3->setVisible(true);
         ui->current_4->setVisible(true);
+    }else if(current == 3){
+        current += 2;
+        ui->current_4->setVisible(true);
+        ui->current_5->setVisible(true);
     }else if(current == 4){
         current += 2;
         ui->current_5->setVisible(true);
         ui->current_6->setVisible(true);
+    }else if(current == 5){
+        current += 2;
+        ui->current_6->setVisible(true);
+        ui->current_7->setVisible(true);
     }else if(current == 6){
         current += 2;
         ui->current_7->setVisible(true);
         ui->current_8->setVisible(true);
+    }else if(current == 7){
+        current += 2;
+        ui->current_8->setVisible(true);
+        ui->current_9->setVisible(true);
     }else if(current == 8){
         current += 2;
         ui->current_9->setVisible(true);
+        ui->current_10->setVisible(true);
+    }else if(current == 9){
+        current += 1;
         ui->current_10->setVisible(true);
     }
 }
