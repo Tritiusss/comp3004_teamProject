@@ -1,0 +1,9 @@
+Circuit Check Sequence Diagram Explaination:
+
+In this diagram, the apply to skin button is pressed which triggers skin contact internally and starts the treatment. 
+
+unpressing apply to skin will pause treatment 
+
+if the button is pressed within 5 seconds, treatment will restart. 
+
+otherwise, treathment will end

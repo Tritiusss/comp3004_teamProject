@@ -1,0 +1,7 @@
+Recording Sequence Diagram Explaination:
+
+the user presses the add recording button which triggers add recording.
+
+Add recording then collects data from main window and saves it in a data stucture 
+
+if the user then presses the load recording button, then load recordings is triggered which makes a panel visible to show recordings on the GUI

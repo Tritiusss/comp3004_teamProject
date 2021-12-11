@@ -1,0 +1,5 @@
+CurrentFaultSequenceDiagramExplaination
+
+In this example, the user presses the current fault button.
+
+This triggers disable device which "permanently" disabled the device and shuts it off. 
